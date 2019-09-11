@@ -69,7 +69,7 @@ exports.login = (req, res) => {
         }
         if (doc) {
           const token = jwt.sign({ _id: doc._id }, process.env.SECRET);
-          res.send({ success: true, token });
+          res.header("auth-token", token).send({ success: true, token });
         }
       },
       percent => {
@@ -87,7 +87,7 @@ exports.deleteUser = (req, res) => {
 };
 
 exports.index = (req, res) => {
-  const token = req.params.token;
+  const token = req.header("auth-token");
   const doc = jwt.verify(token, process.env.SECRET);
   res.send({ success: true, doc });
 };
