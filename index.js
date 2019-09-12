@@ -9,7 +9,7 @@ app.use(express.json());
 require("./config/dbconn");
 
 // Import Routes
-app.use("/api/user", require("./routes/auth"));
+app.use("/api/user", require("./routes/users"));
 
 const PORT = process.env.PORT || 3001;
 

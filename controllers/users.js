@@ -34,7 +34,10 @@ exports.registerUser = (req, res) => {
           } else {
             user.save((err, doc) => {
               if (err) return res.send(err);
-              res.send({ success: true, doc });
+              const token = jwt.sign({ _id: doc._id }, process.env.SECRET);
+              res
+                .header("auth-token", token)
+                .send({ success: true, doc, token });
             });
           }
         }
@@ -86,8 +89,7 @@ exports.deleteUser = (req, res) => {
   });
 };
 
-exports.index = (req, res) => {
-  const token = req.header("auth-token");
-  const doc = jwt.verify(token, process.env.SECRET);
-  res.send({ success: true, doc });
+exports.index = async (req, res) => {
+  const user = await User.findById({ _id: req.user._id }).select("-password");
+  res.send(user);
 };
